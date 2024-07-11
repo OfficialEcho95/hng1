@@ -28,6 +28,11 @@ app.use(
     })
 );
 
+
+app.get('/', (req, res) => {
+    res.send('Hello World!');
+});
+
 app.use('/auth', userRoute);
 app.use('/api/organisations', orgRoute);
 
