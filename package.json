@@ -4,19 +4,27 @@
   "description": "this project creates and authenticate users",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "mocha --experimental-specifier-resolution=node --extension=.mjs tests/**/*.spec.mjs",
     "start": "nodemon server.js"
   },
   "author": "Emmanuel chukwu",
   "license": "ISC",
   "dependencies": {
     "bcryptjs": "^2.4.3",
+    "chai-http": "^5.0.0",
     "connect-mongo": "^5.1.0",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "express-session": "^1.18.0",
     "jsonwebtoken": "^9.0.2",
     "mongodb": "^6.8.0",
-    "mongoose": "^8.4.5"
+    "mongoose": "^8.4.5",
+    "uuid": "^10.0.0"
+  },
+  "devDependencies": {
+    "chai": "^5.1.1",
+    "esm": "^3.2.25",
+    "mocha": "^10.6.0",
+    "supertest": "^7.0.0"
   }
 }

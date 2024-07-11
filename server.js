@@ -4,6 +4,7 @@ const session = require('express-session');
 const MongoStore = require('connect-mongo');
 const dbConnect = require('./db');
 const userRoute = require('./userRoutes');
+const orgRoute = require('./orgRoute');
 
 const app = express();
 
@@ -27,10 +28,14 @@ app.use(
     })
 );
 
-app.use('/api', userRoute);
+app.use('/auth', userRoute);
+app.use('/api/organisations', orgRoute);
 
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
     console.log('Server listening on port:', PORT);
 });
+
+
+module.exports = { app }

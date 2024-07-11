@@ -1,7 +1,8 @@
 const { generateToken } = require('./authMiddleware');
 const User = require('./user');
 const bcrypt = require('bcryptjs');
-
+const Organisation = require('./organisation');
+const { v4: uuidv4 } = require('uuid');
 
 // Helper function to capitalize the first letter of an email
 function capitalizeEmail(email) {
@@ -35,12 +36,36 @@ const registerUser = async (req, res) => {
             phone
         });
 
-        await newUser.save();
+        const savedUser = await newUser.save();
 
-        return res.status(201).json({ message: "User registered successfully", newUser });
+        const newOrganisation = new Organisation({
+            user: savedUser._id,
+            orgId: uuidv4(),
+            name: `${firstname}'s Organisation`,
+            description: '',
+        });
+
+        await newOrganisation.save();
+
+        const token = generateToken(newUser._id);
+
+        return res.status(201).json({
+            status: 'success',
+            message: 'Registration successful',
+            data: {
+                accessToken: token,
+                user: {
+                    userId: newUser._id,
+                    firstName: newUser.firstname,
+                    lastName: newUser.lastname,
+                    email: newUser.email,
+                    phone: newUser.phone,
+                },
+            },
+        });
     } catch (error) {
         console.error("Error registering user:", error);
-        res.status(500).json({ message: "Error registering user" });
+        return res.status(400).json({ status: "sucess", message: "Registration unsuccessful" });
     }
 };
 
@@ -60,10 +85,10 @@ const loginUser = async (req, res) => {
         req.session.token = token;
 
         await req.session.save();
-        return res.status(200).json({ message: `${user.name} logged in successfully`, id: `${user._id}`, user });
+        return res.status(200).json({ status: "sucess", message: "Registration successful", data: { accessToken: token, user: { userId: user._id, user } } });
     } catch (err) {
         console.log(err)
-        res.status(500).json({ message: "Error encountered logging in" });
+        return res.status(401).json({ status: "sucess", message: "Registration unsuccessful" });
     }
 }
 
